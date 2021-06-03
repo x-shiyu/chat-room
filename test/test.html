@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        p{
+            height: 200px;
+            margin: 20px 0 ;
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+
+<p>cac</p>
+<p>cac</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p id="ob_p" data-src="xxx" style="background-color: yellow;">cascascascascasc</p>
+
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+<p>cascascascascasc</p>
+
+<script>
+    // let channel = new MessageChannel();
+    // let port1 = channel.port1;
+    // let port2 = channel.port2;
+    // port1.onmessage = function(event) {
+    //     console.log("port1的onmessage：" + event.data);
+    // }
+    // port2.onmessage = function(event) {
+    //     console.log("port2的onmessage：" + event.data);
+    // }
+    //
+    // port1.postMessage("来自port1的信息");
+    // port2.postMessage("来自port2的信息");
+    //
+    // let obj={
+    //     a:undefined,
+    //     b(){
+    //         console.log('xxx')
+    //     }
+    // }
+    // console.log(JSON.stringify(obj))
+    function inFn(args){
+        console.log(args)
+    }
+    let obEl = document.getElementById('ob_p')
+    let observer = new IntersectionObserver(inFn,{
+        rootMargin:"100px 0px 0px 0px"
+    });
+    observer.observe(obEl)
+</script>
+</body>
+</html>
