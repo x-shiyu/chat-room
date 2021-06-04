@@ -14,22 +14,23 @@
 <body>
 
 <p>cac</p>
-<p>cac</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p id="ob_p" data-src="xxx" style="background-color: yellow;">cascascascascasc</p>
+<button id="btn">start</button>
+<!--<p>cac</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p id="ob_p" data-src="xxx" style="background-color: yellow;">cascascascascasc</p>-->
 
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
-<p>cascascascascasc</p>
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
+<!--<p>cascascascascasc</p>-->
 
 <script>
     // let channel = new MessageChannel();
@@ -52,14 +53,34 @@
     //     }
     // }
     // console.log(JSON.stringify(obj))
-    function inFn(args){
-        console.log(args)
+    // function inFn(args){
+    //     console.log(args)
+    // }
+    // let obEl = document.getElementById('ob_p')
+    // let observer = new IntersectionObserver(inFn,{
+    //     rootMargin:"100px 0px 0px 0px"
+    // });
+    // observer.observe(obEl)
+
+    // window.addEventListener('devicelight',(ev)=>{
+    //     debugger
+    // })
+
+    function show(){
+        Promise.resolve(1).then(console.log)
+        window.requestAnimationFrame((time)=>{
+            if(time<10000){
+                console.log(time)
+                setTimeout(()=>{
+                    console.log('time out')
+                },0)
+                show()
+            }
+        })
+        Promise.resolve(2).then(console.log)
     }
-    let obEl = document.getElementById('ob_p')
-    let observer = new IntersectionObserver(inFn,{
-        rootMargin:"100px 0px 0px 0px"
-    });
-    observer.observe(obEl)
+    show()
+    document.getElementById('btn').addEventListener('click',show)
 </script>
 </body>
 </html>
