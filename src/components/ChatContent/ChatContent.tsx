@@ -3,20 +3,25 @@ import ChatContentView from "@@/ChatContent/ChatContentView";
 import ChatContentInput from "@@/ChatContent/ChatContentInput";
 import { chatBox } from "@@/ChatContent/ChatContentCss";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { originTestData } from "@/atoms/testDataState";
-import { originDataId } from "@/selectors/testDataId";
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { ChatList, CurrentTarget } from "@/atoms/ChatInfo";
+import { getChatList } from "@/selectors/ChatInfoSelector";
+
 export default function ChatContent() {
   let { id } = useParams<{ id: string }>();
-  let [_, setOriginData] = useRecoilState(originTestData);
+  let [chatList, setChatList] = useRecoilState(ChatList);
+  let [currentTarget, setCurrentTarget] = useRecoilState(CurrentTarget);
 
-  let resetData = useResetRecoilState(originTestData);
-  let data = useRecoilValue(originDataId(Number(id)));
+  let resetData = useResetRecoilState(ChatList);
+  let response = useRecoilValue(getChatList);
   let location = useLocation();
 
   useEffect(() => {
-    setOriginData(data.data);
+    // @ts-ignore
+    setChatList(response.data);
+    // @ts-ignore
+    setCurrentTarget(id);
   }, [id]);
   useEffect(() => {
     return () => {

@@ -24,7 +24,7 @@ export default function BaseLayout() {
           <Suspense fallback={<div>...Loading...</div>}>
             <Switch>
               <Redirect from="/" exact to="/chat" />
-              <Route path="/chat/">
+              <Route path="/chat">
                 <ChatBox></ChatBox>
               </Route>
               <Route path="/contact">

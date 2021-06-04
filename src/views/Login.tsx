@@ -1,23 +1,27 @@
-import { useHistory, useLocation } from "react-router-dom";
 import { login } from "@/atoms/AuthStatus";
 import { useRecoilState } from "recoil";
+import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
-export default function Login() {
-  let location = useLocation();
+interface LoginProps {
+  from?: string;
+}
+export default function Login({ from }: LoginProps) {
   let history = useHistory();
-  let [_, setLogin] = useRecoilState(login);
+  let [isLogin, setLogin] = useRecoilState(login);
   function handleClick() {
     setLogin(true);
-    let pathname =
-      // @ts-ignore
-      location.state && location.state.from && location.state.from.pathname;
-    setTimeout(() => {
-      if (pathname !== "/login") {
-        history.replace(pathname, { login: true });
-      } else {
-        history.replace("/chat", { login: true });
-      }
-    }, 100);
   }
+
+  useEffect(() => {
+    if (isLogin) {
+      if (from && from !== "/login") {
+        history.push(from);
+      } else {
+        history.push("/chat");
+      }
+    }
+  }, [isLogin]);
+
   return <button onClick={handleClick}>login</button>;
 }
