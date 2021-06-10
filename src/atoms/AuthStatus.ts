@@ -1,11 +1,26 @@
 import { atom } from "recoil";
+import { getToken } from "@/utils/storage";
+export interface UserInfo {
+  name?: string;
+  id?: number;
+}
 
-export const login = atom({
+export const AtomLogin = atom({
   key: "login",
-  default: false,
+  default: getToken() ? true : false,
 });
 
-export const username = atom({
-  key: "username",
-  default: "",
+export const AtomUserInfo = atom<UserInfo>({
+  key: "user-info",
+  default: {},
+});
+
+export const AtomActiveRoomId = atom<number>({
+  key: "active-room",
+  default: -1,
+});
+
+export const AtomActiveContact = atom<number>({
+  key: "active-contact",
+  default: -1,
 });

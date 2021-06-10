@@ -3,6 +3,7 @@ const msg = css`
   width: 100%;
   margin-top: 20px;
   display: flex;
+  justify-content: flex-start;
 `;
 const msgHead = css`
   span {
@@ -14,6 +15,7 @@ const msgHead = css`
     line-height: 40px;
     font-weight: bold;
     text-align: center;
+    color: #fff;
   }
 `;
 const msgContent = css`
@@ -21,12 +23,10 @@ const msgContent = css`
     padding: 0 20px;
     text-align: left;
     max-width: 150px;
-    height: auto;
     box-sizing: content-box;
   }
 `;
 export const msgLeft = css`
-  justify-content: flex-start;
   ${msg}
   ${msgHead}
   ${msgContent}
@@ -34,7 +34,6 @@ export const msgLeft = css`
 
 export const msgRight = css`
   flex-direction: row-reverse;
-  justify-content: flex-start;
   ${msg}
   ${msgHead}
   ${msgContent}
@@ -42,11 +41,10 @@ export const msgRight = css`
 
 export const msgBox = css`
   width: 100%;
-  padding: 0 10px;
+  padding: 0 10px 40px 0;
   overflow-y: auto;
-  overflow-x: visible;
-  display: flex;
-  flex-wrap: wrap;
+  overflow-x: hidden;
+  height: 100%;
 `;
 
 export const chatBox = css`
@@ -54,6 +52,8 @@ export const chatBox = css`
   height: 100%;
   padding-bottom: 100px;
   .content-box {
+    overflow: hidden;
+    height: 100%;
   }
   .input-box {
     position: absolute;
@@ -62,5 +62,22 @@ export const chatBox = css`
     width: 100%;
     height: 100px;
     background-color: gray;
+  }
+`;
+
+export const chatInput = css`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 40px;
+  .send {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  textarea {
+    height: 100%;
+    resize: none;
+    overflow-y: auto;
   }
 `;

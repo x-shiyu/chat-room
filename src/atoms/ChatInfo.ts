@@ -1,17 +1,29 @@
 import { atom } from "recoil";
-import { mockChatRooms } from "@/mock";
 
-export const ChatPerson = atom({
+export interface Msg {
+  id: number;
+  msg: string;
+  time: string;
+  name: string;
+  userId: number;
+}
+
+export interface RoomInfo {
+  room_id: number;
+  persons: any[];
+  list?: Msg[];
+}
+export const AtomChatRoom = atom<RoomInfo[]>({
   key: "chat-person",
-  default: mockChatRooms(),
+  default: [],
 });
 
-export const ChatList = atom({
+export const AtomChatList = atom<Map<string, Msg[]>>({
   key: "chat-list",
-  default: null,
+  default: new Map(),
 });
 
-export const CurrentTarget = atom({
-  key: "current-target",
-  default: null,
+export const AtomContacts = atom<any[]>({
+  key: "contacts",
+  default: [],
 });

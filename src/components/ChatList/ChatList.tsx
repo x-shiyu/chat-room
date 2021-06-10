@@ -1,26 +1,26 @@
 /** @jsxImportSource @emotion/react */
 import { listItem, itemActive } from "./ChatListCss";
-import { useHistory, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { ChatPerson } from "@/atoms/ChatInfo";
-
+import { AtomChatRoom } from "@/atoms/ChatInfo";
+import { AtomActiveRoomId } from "@/atoms/AuthStatus";
 export default function ChatList() {
-  let { id } = useParams<{ id: string }>();
-  let history = useHistory();
-  let [chatPerson] = useRecoilState(ChatPerson);
+  let [activeRoomId, setActiveRoomId] = useRecoilState(AtomActiveRoomId);
+  let [chatRoom] = useRecoilState(AtomChatRoom);
+
   function handleClick(id: number) {
-    history.push("/chat/" + id);
+    setActiveRoomId(id);
   }
+
   return (
     <>
       <ul css={listItem}>
-        {chatPerson.data.map((user) => (
+        {chatRoom.map((room) => (
           <li
-            key={user.id}
-            css={id === user.id ? itemActive : ""}
-            onClick={() => handleClick(user.id)}
+            key={room.room_id}
+            css={activeRoomId === room.room_id ? itemActive : ""}
+            onClick={() => handleClick(room.room_id)}
           >
-            {user.name}
+            {room.persons.map((item) => item.name).join("-")}
           </li>
         ))}
       </ul>

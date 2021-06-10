@@ -1,37 +1,42 @@
 import "./App.css";
 import { Route } from "react-router-dom";
-import BaseLayout from "@/layout/BaseLayout/BaseLayout";
-import Login from "@/views/Login";
-import { useRecoilState } from "recoil";
-import { login } from "@/atoms/AuthStatus";
+import Login from "@/views/Login/Login";
+import useInit from "@/hooks/useInit";
+import { BrowserRouter as Router } from "react-router-dom";
+import { routeMatch } from "@/route";
 
-const noAuthPath = ["/test"];
+const noAuthPath = ["/test", "/login"];
 
 function authRender(location: any, login: boolean) {
+  let RouteCom = routeMatch(location.pathname);
   if (noAuthPath.indexOf(location.pathname) > -1) {
-    return null;
+    return <RouteCom />;
+  } else {
+    return login ? (
+      <RouteCom />
+    ) : (
+      <Login from={location.state && location.state.from} />
+    );
   }
-  return login ? (
-    <BaseLayout />
-  ) : (
-    <Login from={location.state && location.state.from} />
-  );
 }
 
 export default function App() {
-  let [isLogin] = useRecoilState(login);
+  let { isLogin } = useInit();
+
   return (
     <>
-      <Route path={"/login"}>
-        <Login />
-      </Route>
-      <Route path={"/test"}>
-        <h1>test</h1>
-      </Route>
-      <Route
-        path="/"
-        render={({ location }) => authRender(location, isLogin)}
-      ></Route>
+      <Router>
+        <Route path={"/login"}>
+          <Login />
+        </Route>
+        <Route path={"/test"}>
+          <h1>test</h1>
+        </Route>
+        <Route
+          path="/"
+          render={({ location }) => authRender(location, isLogin)}
+        ></Route>
+      </Router>
     </>
   );
 }

@@ -1,12 +1,15 @@
+/** @jsxImportSource @emotion/react */
 import { Button } from "antd";
-import { query } from "@/atoms/testDataState";
-import { useRecoilState } from "recoil";
-
+import { chatInput } from "@@/ChatContent/ChatContentCss";
+import useChatInput from "@/hooks/useChatInput";
+import { Input } from "antd";
+let { TextArea } = Input;
 export default function ChatContentInput() {
-  let [_, setQuery] = useRecoilState(query);
+  let { value, handleInputChange, handleClick } = useChatInput();
   return (
-    <div>
-      <Button type="primary" onClick={() => setQuery({ id: 4 })}>
+    <div css={chatInput}>
+      <TextArea value={value} onChange={handleInputChange} />
+      <Button type="primary" className="send" onClick={handleClick}>
         发送
       </Button>
     </div>

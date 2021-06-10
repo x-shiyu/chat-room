@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { Redirect, Route, Switch } from "react-router-dom";
-import { lazy, Suspense } from "react";
-import ErrorBoundary from "@@/ErrorBoundry";
+import { lazy } from "react";
 import MenuList from "@@/MenuList/MenuList";
 import {
   layoutBox,
@@ -10,8 +9,8 @@ import {
 } from "@/layout/BaseLayout/BaseLayoutCss";
 
 const ChatBox = lazy(() => import("@/views/ChatBox/ChatBox"));
-const ContactBox = lazy(() => import("@/views/ContactBox"));
-const NoFound = lazy(() => import("@/views/NoFound"));
+const ContactBox = lazy(() => import("@/views/ContactBox/ContactBox"));
+const NoFound = lazy(() => import("@/views/NoFound/NoFound"));
 
 export default function BaseLayout() {
   return (
@@ -20,22 +19,18 @@ export default function BaseLayout() {
         <MenuList></MenuList>
       </nav>
       <main css={layoutMain}>
-        <ErrorBoundary>
-          <Suspense fallback={<div>...Loading...</div>}>
-            <Switch>
-              <Redirect from="/" exact to="/chat" />
-              <Route path="/chat">
-                <ChatBox></ChatBox>
-              </Route>
-              <Route path="/contact">
-                <ContactBox />
-              </Route>
-              <Route path="*">
-                <NoFound />
-              </Route>
-            </Switch>
-          </Suspense>
-        </ErrorBoundary>
+        <Switch>
+          <Redirect from="/" exact to="/chat" />
+          <Route path="/chat">
+            <ChatBox></ChatBox>
+          </Route>
+          <Route path="/contact">
+            <ContactBox />
+          </Route>
+          <Route path="*">
+            <NoFound />
+          </Route>
+        </Switch>
       </main>
     </div>
   );

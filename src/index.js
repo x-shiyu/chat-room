@@ -1,19 +1,20 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RecoilRoot } from "recoil";
-import { BrowserRouter as Router } from "react-router-dom";
-
+import ErrorBoundary from "@@/ErrorBoundry";
 ReactDOM.render(
-  <RecoilRoot>
-    <React.StrictMode>
-      <Router>
-        <App />
-      </Router>
-    </React.StrictMode>
-  </RecoilRoot>,
+  <ErrorBoundary>
+    <Suspense fallback={<div>...Loading...</div>}>
+      <RecoilRoot>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </RecoilRoot>
+    </Suspense>
+  </ErrorBoundary>,
   document.getElementById("root")
 );
 

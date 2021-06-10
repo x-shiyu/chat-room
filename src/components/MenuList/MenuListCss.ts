@@ -17,3 +17,11 @@ export const listItem = css`
     }
   }
 `;
+
+export const userBox = css`
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+  height: 60px;
+  line-height: 60px;
+`;

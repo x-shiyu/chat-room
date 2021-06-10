@@ -1,19 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import { originDataChildren } from "@/selectors/testDataId";
-import { useRecoilValue } from "recoil";
 import { msgLeft, msgRight, msgBox } from "./ChatContentCss";
+import useChatContent from "@/hooks/useChatContent";
 export default function ChatContentView() {
-  let children = useRecoilValue(originDataChildren) as any[];
+  let { chatList, userInfo, ref } = useChatContent();
   return (
-    <div>
-      <ul css={msgBox}>
-        {children.map((item, index) => (
-          <li key={item.id} css={index % 2 === 0 ? msgLeft : msgRight}>
-            <span>{item.author.substr(0, 2)}</span>
-            <p>{item.text.substr(0, 50)}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul css={msgBox} ref={ref}>
+      {chatList?.map((item, index) => (
+        <li
+          key={item.id}
+          css={item.userId === userInfo.id ? msgLeft : msgRight}
+        >
+          <span>{item.name}</span>
+          <p>{item.msg}</p>
+        </li>
+      ))}
+    </ul>
   );
 }
