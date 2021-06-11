@@ -15,10 +15,12 @@ export default function useChatContent() {
   useEffect(() => {
     if (activeRoom !== -1) {
       let socket = createRoomSocket(activeRoom, {
-        add_msg: (msg: string | boolean) => {
-          // if(){
-          //
-          // }
+        add_msg: (msg: any) => {
+          if (msg === false) {
+            alert("发送失败！");
+          } else {
+            setChatList(msg);
+          }
         },
       });
       socketAction?.addSocket(activeRoom, socket);

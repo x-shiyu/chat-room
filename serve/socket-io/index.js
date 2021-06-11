@@ -7,7 +7,7 @@ module.exports = function ioHandler(socket) {
   let [_, roomId] = nsp.name.match(/^\/socket\/room\/(\d+)$/);
   let { auth } = handshake;
   socket.on("add_msg", async (msg) => {
-    let { name, id: userId } = verify(auth.token);
+    let { name, id: userId } = await verify(auth.token);
     try {
       let id = uuidv4();
       let time = Date.now();

@@ -11,6 +11,7 @@ export default function useChatInput() {
   let socketAction = useContext(SocketContext);
   let handleClick = async () => {
     let socket = socketAction?.sockets.get(activeRoomId) as Socket;
+    setValue("");
     socket.emit("add_msg", value);
   };
   let handleInputChange = (ev: any) => {
