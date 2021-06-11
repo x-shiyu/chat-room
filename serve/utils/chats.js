@@ -1,4 +1,4 @@
-const { redisLLen, redisLRange } = require("../config/db");
+const { redisLLen, redisLRange, redisRPush } = require("../config/db");
 async function getChatList(roomId) {
   let len = await redisLLen(roomId);
   if (len > 0) {
@@ -7,6 +7,9 @@ async function getChatList(roomId) {
   return [];
 }
 
+async function addMsg(roomId, msg) {
+  return await redisRPush("room");
+}
 module.exports = {
   getChatList,
 };

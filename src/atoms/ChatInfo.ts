@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { Socket } from "socket.io-client";
 
 export interface Msg {
   id: number;
@@ -26,4 +27,9 @@ export const AtomChatList = atom<Map<string, Msg[]>>({
 export const AtomContacts = atom<any[]>({
   key: "contacts",
   default: [],
+});
+
+export const AtomIO = atom<Socket | undefined>({
+  key: "socket-io",
+  default: undefined,
 });

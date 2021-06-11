@@ -27,6 +27,7 @@ const msgContent = css`
   }
 `;
 export const msgLeft = css`
+  padding-left: 20px;
   ${msg}
   ${msgHead}
   ${msgContent}

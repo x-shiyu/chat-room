@@ -20,7 +20,7 @@ client.on("error", function (error) {
 // 方法 2: 分别传递参数 (sqlite)
 const sequelize = new Sequelize("chat_room", "root", "123456", {
   dialect: "mariadb",
-  host: "172.21.216.210",
+  host: "172.21.213.162",
   port: 3306,
 });
 function query(sql, type, transaction) {

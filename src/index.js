@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RecoilRoot } from "recoil";
 import ErrorBoundary from "@@/ErrorBoundry";
+window.global = {};
 ReactDOM.render(
   <ErrorBoundary>
     <Suspense fallback={<div>...Loading...</div>}>

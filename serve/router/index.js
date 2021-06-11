@@ -90,7 +90,7 @@ router.get("/user/room/:contactId", async (ctx, next) => {
 router.get("/room/:id", async (ctx, next) => {
   let roomId = ctx.params["id"];
   let chatList = await getChatList("room_" + roomId);
-  ctx.body = chatList.map((item) => JSON.parse(chatList));
+  ctx.body = chatList.map((item) => JSON.parse(item));
 });
 
 //房间添加信息

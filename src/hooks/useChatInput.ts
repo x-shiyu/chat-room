@@ -1,19 +1,17 @@
-import { Msg } from "@/atoms/ChatInfo";
 import { useState } from "react";
-import { sendMsg } from "@/api/chat";
-import { ChatRoomList } from "@/selectors/ChatInfoSelector";
 import { useRecoilState } from "recoil";
 import { AtomActiveRoomId } from "@/atoms/AuthStatus";
+import { SocketContext } from "@/layout/BaseLayout/BaseLayout";
+import { useContext } from "react";
+import { Socket } from "socket.io-client";
 
 export default function useChatInput() {
   let [activeRoomId] = useRecoilState(AtomActiveRoomId);
   const [value, setValue] = useState("");
-  let [chatList, setChatList] = useRecoilState(ChatRoomList(activeRoomId));
+  let socketAction = useContext(SocketContext);
   let handleClick = async () => {
-    let response = await sendMsg(activeRoomId, value);
-    if (response) {
-      setChatList(response);
-    }
+    let socket = socketAction?.sockets.get(activeRoomId) as Socket;
+    socket.emit("add_msg", value);
   };
   let handleInputChange = (ev: any) => {
     let value = ev.target.value;

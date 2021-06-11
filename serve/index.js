@@ -5,23 +5,22 @@ const ioHandler = require("./socket-io");
 const router = require("./router");
 const headerSet = require("./middlewares/headerSet");
 const tokenCheck = require("./middlewares/tokenCheck");
-
+const checkSocketToken = require("./middlewares/checkSocketToken");
 const app = new Koa();
 const http = require("http").createServer(app.callback());
 
 let io = new Server(http, {
-  path: "/socket",
   cors: {
     origin: true,
     credentials: true,
   },
 });
-
 let connect_num = 0;
-io.on("connection", (socket) => {
-  console.log("connect num:" + ++connect_num);
+
+const msgAddIO = io.of(/^\/socket\/room\/(\d+)$/).on("connection", (socket) => {
   ioHandler(socket);
 });
+msgAddIO.use(checkSocketToken);
 
 //设置响应头
 app.use(headerSet);

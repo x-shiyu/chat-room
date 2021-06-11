@@ -12,9 +12,15 @@ const routes = {
   "/chat": {
     component: BaseLayout,
   },
+  "/contact": {
+    component: BaseLayout,
+  },
+  "/": {
+    component: BaseLayout,
+  },
 };
 export function routeMatch(path: string) {
   // @ts-ignore
-  return routes[path].component || NoFound;
+  return routes[path]?.component || NoFound;
 }
 export default routes;

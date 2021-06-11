@@ -88,6 +88,12 @@ function getUserContactRoom(userId, targetId) {
     `select room_id from user_room where user_id=${userId} and room_id in (select room_id from user_room where user_id = ${targetId})`
   );
 }
+
+function roomMatch(userId, roomId) {
+  return querySelect(
+    `select count(0) as num from user_room where user_id=${userId} and room_id=${roomId}`
+  );
+}
 module.exports = {
   getUserInfoById,
   getContacts,
@@ -97,4 +103,5 @@ module.exports = {
   getUserContactRoom,
   getRoomPerson,
   addRoom,
+  roomMatch,
 };
