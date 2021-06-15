@@ -2,10 +2,11 @@ import { css } from "@emotion/react";
 
 export const listItem = css`
   li {
+    margin-top: 10px;
+    text-align: center;
     a {
       display: block;
       padding: 10px;
-      margin-top: 10px;
       background: yellow;
       cursor: pointer;
       text-align: center;
@@ -24,4 +25,15 @@ export const userBox = css`
   color: #fff;
   height: 60px;
   line-height: 60px;
+`;
+
+export const remarkBox = css`
+  padding-top: 20px;
+  display: flex;
+  p {
+    flex: 1;
+  }
+  textarea {
+    flex: 9;
+  }
 `;

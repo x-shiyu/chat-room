@@ -1,17 +1,18 @@
 import { useRecoilState } from "recoil";
 import { AtomUserInfo, UserInfo, AtomActiveRoomId } from "@/atoms/AuthStatus";
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef } from "react";
 import { ChatRoomList } from "@/selectors/ChatInfoSelector";
 import { getRoomInfoById } from "@/api/chat";
 import { createRoomSocket } from "@/utils/socket-io";
-import { SocketContext } from "@/layout/BaseLayout/BaseLayout";
+import { AtomSockets } from "@/atoms/Sockets";
+import { mapAdd } from "@/utils";
 
 export default function useChatContent() {
   let [activeRoom] = useRecoilState<number>(AtomActiveRoomId);
   let ref = useRef<HTMLUListElement>(null);
   let [chatList, setChatList] = useRecoilState(ChatRoomList(activeRoom));
   let [userInfo] = useRecoilState<UserInfo>(AtomUserInfo);
-  let socketAction = useContext(SocketContext);
+  let [sockets, setSockets] = useRecoilState(AtomSockets);
   useEffect(() => {
     if (activeRoom !== -1) {
       let socket = createRoomSocket(activeRoom, {
@@ -23,7 +24,7 @@ export default function useChatContent() {
           }
         },
       });
-      socketAction?.addSocket(activeRoom, socket);
+      setSockets(mapAdd(sockets, "room_" + activeRoom, socket));
       getRoomInfoById(activeRoom).then((data) => {
         setChatList(data);
       });

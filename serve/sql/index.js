@@ -11,7 +11,7 @@ function getUserInfoById(id) {
 }
 function getContacts(id) {
   return querySelect(
-    `select * from user where id in (select per2 from contacts where per1 =${id})`
+    `select * from user where id in (select per2 from contacts where per1 =${id} and accept=1)`
   );
 }
 

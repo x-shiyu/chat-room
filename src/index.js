@@ -10,9 +10,7 @@ ReactDOM.render(
   <ErrorBoundary>
     <Suspense fallback={<div>...Loading...</div>}>
       <RecoilRoot>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
+        <App />
       </RecoilRoot>
     </Suspense>
   </ErrorBoundary>,

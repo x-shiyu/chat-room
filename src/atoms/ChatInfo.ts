@@ -28,8 +28,3 @@ export const AtomContacts = atom<any[]>({
   key: "contacts",
   default: [],
 });
-
-export const AtomIO = atom<Socket | undefined>({
-  key: "socket-io",
-  default: undefined,
-});

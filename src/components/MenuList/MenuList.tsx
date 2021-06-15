@@ -1,22 +1,36 @@
 /** @jsxImportSource @emotion/react */
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { listItem, userBox } from "./MenuListCss";
-import { AtomUserInfo } from "@/atoms/AuthStatus";
-import { useRecoilState } from "recoil";
-
+import { Button } from "antd";
+import useMenu from "@/hooks/useMenu";
+import AddContactModal from "@@/AddContactModal";
 export default function MenuList() {
-  let [userInfo] = useRecoilState(AtomUserInfo);
+  const navActiveStyle = {
+    background: "lightcoral",
+    color: "yellow",
+  };
+  let { userInfo, setVisible, visible } = useMenu();
   return (
     <>
       <h1 css={userBox}>{userInfo.name}</h1>
       <ul css={listItem}>
         <li>
-          <Link to="/">信息</Link>
+          <NavLink to="/chat" activeStyle={navActiveStyle}>
+            信息
+          </NavLink>
         </li>
         <li>
-          <Link to="/contact">联系人</Link>
+          <NavLink to="/contact" activeStyle={navActiveStyle}>
+            联系人
+          </NavLink>
+        </li>
+        <li>
+          <Button type="primary" onClick={() => setVisible(true)}>
+            添加联系人
+          </Button>
         </li>
       </ul>
+      <AddContactModal visible={visible} setVisible={setVisible} />
     </>
   );
 }

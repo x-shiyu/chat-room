@@ -35,3 +35,11 @@ export function createRoomSocket(roomId: number, events: any) {
   });
   return socket;
 }
+
+export function createContactSocket(events: any) {
+  let socket = createSocket("/contact");
+  Object.keys(events).forEach((ev) => {
+    socket.on(ev, events[ev]);
+  });
+  return socket;
+}

@@ -17,11 +17,11 @@ client.on("error", function (error) {
   console.error(error);
 });
 
-// 方法 2: 分别传递参数 (sqlite)
 const sequelize = new Sequelize("chat_room", "root", "123456", {
   dialect: "mariadb",
-  host: "172.21.213.162",
-  port: 3306,
+  host: "localhost",
+  port: 3307,
+  timezone: "+08:00",
 });
 function query(sql, type, transaction) {
   return sequelize.query(sql, {

@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { AtomChatRoom } from "@/atoms/ChatInfo";
+import { AtomChatRoom, AtomContacts } from "@/atoms/ChatInfo";
 import { AtomUserInfo } from "@/atoms/AuthStatus";
 import { useEffect } from "react";
 import { getContacts, getAllRoomList } from "@/api/chat";
@@ -8,6 +8,7 @@ import { AtomLogin } from "@/atoms/AuthStatus";
 
 export default function useInit() {
   let [_, setChatRoom] = useRecoilState(AtomChatRoom);
+  let [__, setContacts] = useRecoilState(AtomContacts);
   let [userInfo, setUserInfo] = useRecoilState(AtomUserInfo);
   let [isLogin] = useRecoilState(AtomLogin);
 
@@ -16,6 +17,7 @@ export default function useInit() {
       Promise.all([getAllRoomList(), getUserInfo(), getContacts()]).then(
         ([rooms, userInfo, contacts]) => {
           setChatRoom(rooms);
+          setContacts(contacts);
           setUserInfo({
             ...userInfo,
           });

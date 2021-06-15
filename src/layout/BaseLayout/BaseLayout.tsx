@@ -2,6 +2,7 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 import { createContext, lazy } from "react";
 import MenuList from "@@/MenuList/MenuList";
+import { mapAdd } from "@/utils";
 import {
   layoutBox,
   layoutNav,
@@ -16,8 +17,8 @@ const NoFound = lazy(() => import("@/views/NoFound/NoFound"));
 export const SocketContext =
   createContext<
     | {
-        sockets: Map<number, Socket>;
-        addSocket: (id: number, socket: Socket) => void;
+        sockets: Map<number | string, Socket>;
+        addSocket: (id: number | string, socket: Socket) => void;
       }
     | undefined
   >(undefined);
@@ -28,7 +29,7 @@ export default function BaseLayout() {
       value={{
         sockets: new Map(),
         addSocket(id, socket) {
-          this.sockets.set(id, socket);
+          this.sockets = mapAdd(this.sockets, id, socket);
         },
       }}
     >
