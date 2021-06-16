@@ -15,16 +15,14 @@ export default function useChatContent() {
   let [sockets, setSockets] = useRecoilState(AtomSockets);
   useEffect(() => {
     if (activeRoom !== -1) {
-      let socket = createRoomSocket(activeRoom, {
-        add_msg: (msg: any) => {
-          if (msg === false) {
-            alert("发送失败！");
-          } else {
-            setChatList(msg);
-          }
-        },
-      });
-      setSockets(mapAdd(sockets, "room_" + activeRoom, socket));
+      if (!sockets.get('room_' + activeRoom)) {
+        let socket = createRoomSocket(activeRoom, {
+          receive_msg:(response: any)=>{
+            setChatList(response);
+          },
+        });
+        setSockets(mapAdd(sockets, "room_" + activeRoom, socket));
+      }
       getRoomInfoById(activeRoom).then((data) => {
         setChatList(data);
       });

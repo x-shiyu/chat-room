@@ -4,6 +4,7 @@ import { listItem, userBox } from "./MenuListCss";
 import { Button } from "antd";
 import useMenu from "@/hooks/useMenu";
 import AddContactModal from "@@/AddContactModal";
+import ReceivedContact from '@@/ReceivedContact'
 export default function MenuList() {
   const navActiveStyle = {
     background: "lightcoral",
@@ -29,8 +30,12 @@ export default function MenuList() {
             添加联系人
           </Button>
         </li>
+        <li>
+          <ReceivedContact/>
+        </li>
       </ul>
       <AddContactModal visible={visible} setVisible={setVisible} />
+
     </>
   );
 }

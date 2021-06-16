@@ -1,9 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { Input, Modal } from "antd";
+import { Input, message, Modal } from "antd";
 import { remarkBox } from "@@/MenuList/MenuListCss";
 import { useState } from "react";
-import { AtomSockets } from "@/atoms/Sockets";
-import { useRecoilState } from "recoil";
+import { addContacts } from "@/api/chat";
 
 const { TextArea } = Input;
 
@@ -17,11 +16,20 @@ export default function AddContactModal({
 }: AddContactModalProps) {
   let [remark, setRemark] = useState("");
   let [email, setEmail] = useState("");
-  let [sockets] = useRecoilState(AtomSockets);
   function addContact() {
-    sockets.get("contacts")?.emit("add_contact", {
+    addContacts(
       email,
       remark,
+    ).then((response:any)=>{
+      if(response.code===200){
+        if(response.data){
+          console.log(response.data);
+        }else{
+          message.success(response.msg)
+        }
+      }else{
+        message.error(response.msg)
+      }
     });
     setEmail("");
     setRemark("");

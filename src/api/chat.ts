@@ -2,6 +2,17 @@ import axios from "./http";
 export function getContacts(): Promise<any> {
   return axios.get("/contacts");
 }
+export function addContacts(email:string,remark:string):Promise<any>{
+  return axios.post("/contacts",{
+    email,
+    remark
+  });
+}
+export function getReceivedContacts(): Promise<any>{
+  return axios.get('/contacts/new')
+}
+
+
 export function getRoomInfoById(roomId: number): Promise<any> {
   return axios.get("/room/" + roomId);
 }
@@ -17,3 +28,10 @@ export function sendMsg(roomId: number, msg: string): Promise<any> {
     msg,
   });
 }
+
+export function acceptContact(id:number): Promise<any> {
+  return axios.post('/contacts/accept',{
+    id
+  })
+}
+

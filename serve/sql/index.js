@@ -1,7 +1,6 @@
 const {
   sequelize,
   querySelect,
-  redisGet,
   queryAdd,
   redisLRange,
   redisLLen,
@@ -94,6 +93,19 @@ function roomMatch(userId, roomId) {
     `select count(0) as num from user_room where user_id=${userId} and room_id=${roomId}`
   );
 }
+
+function getUserIdByEmail(email){
+  return querySelect(`select id,name from user where email = '${email}'`)
+}
+
+function addContact(originId,targetId,remark){
+    return queryAdd(`INSERT INTO contacts ( per1,per2,accept,remark ) VALUES ( ${originId},${targetId},null,'${remark}' )`)
+}
+
+function getNewContactsList(id){
+  return querySelect(`select * from user WHERE id IN  (SELECT per2 as contactId from contacts where per1 = ${id}  AND accept IS NULL)`)
+}
+
 module.exports = {
   getUserInfoById,
   getContacts,
@@ -102,6 +114,10 @@ module.exports = {
   getUserRoomMsg,
   getUserContactRoom,
   getRoomPerson,
+  getNewContactsList,
+  getUserIdByEmail,
+
   addRoom,
   roomMatch,
+  addContact,
 };

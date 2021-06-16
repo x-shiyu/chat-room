@@ -8,7 +8,7 @@ module.exports = async function tokenCheck(ctx, next) {
   ) {
     await next();
   } else {
-    if (ctx.req.headers["authentication"] !== "") {
+    if (ctx.req.headers["authentication"]) {
       let { token, id, name } = await isExpires(
         ctx.req.headers["authentication"]
       );

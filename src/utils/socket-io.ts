@@ -43,3 +43,13 @@ export function createContactSocket(events: any) {
   });
   return socket;
 }
+
+export function createQuerySocket(query:any,events:any){
+  let socket = createSocket("/",{
+    query
+  });
+  Object.keys(events).forEach((ev) => {
+    socket.on(ev, events[ev]);
+  });
+  return socket
+}

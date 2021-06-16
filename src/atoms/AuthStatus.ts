@@ -24,3 +24,9 @@ export const AtomActiveContact = atom<number>({
   key: "active-contact",
   default: -1,
 });
+
+
+export const AtomReceivedContacts = atom<any[]>({
+  key:'received-contacts',
+  default:[]
+})
