@@ -1,89 +1,104 @@
-const {
-  getContacts,
-} = require("../sql");
-const { getUserIdByEmail, getNewContactsList } = require('../sql')
-const { Contacts, User } = require('../model')
-const { Op } = require('sequelize')
+const { getUserIdByEmail, getNewContactFrom } = require("../sql");
+const { Contacts, User, NewContactRequest } = require("../model");
+const { Op } = require("sequelize");
 
 module.exports = ({ normalIo }) => {
   //联系人信息
   const getAllContacts = {
     path: "/contacts",
-    method: 'GET',
+    method: "GET",
     handle: async (ctx) => {
       let id = ctx.userId;
-      let contacts = await getContacts(id);
-      ctx.body = contacts;
-    }
-  }
+      let contacts = await Contacts.findAll({
+        where: {
+          [Op.or]: [{ per1: id }, { per2: id }],
+        },
+      });
+      contacts = contacts?.map((item) => {
+        return item.dataValues.per1 === id
+          ? item.dataValues.per2
+          : item.dataValues.per1;
+      });
+      contacts = await User.findAll({
+        where: {
+          id: {
+            [Op.in]: contacts,
+          },
+        },
+      });
+      ctx.body = contacts?.map((item) => item.dataValues);
+    },
+  };
 
   // 添加联系人
   const addContact = {
     path: "/contacts",
-    method: 'POST',
+    method: "POST",
     handle: async (ctx) => {
       let { email, remark } = ctx.request.body;
       let id = ctx.userId;
-      let [data] = await getUserIdByEmail(email)
+      let [data] = await getUserIdByEmail(email);
       if (data) {
         let result = await Contacts.findOne({
           where: {
-            per1: id,
-            per2: data.id,
-          }
-        })
+            [Op.or]: [
+              { per1: id, per2: data.id },
+              { per1: data.id, per2: id },
+            ],
+          },
+        });
         if (result) {
-          let { dataValues: { accept } } = result;
-          if (accept === 1) {
-            ctx.body = {
-              code: 400,
-              msg: data.name + '已经是你的联系人了'
-            }
-            return
-          } else {
-            await Contacts.update({
-              remark
-            }, {
-              where: {
-                per1: id,
-                per2: data.id
-              }
-            })
-          }
+          ctx.body = {
+            code: 400,
+            msg: data.name + "已经是你的联系人了",
+          };
         } else {
-          await Contacts.create({
-            per1: id,
-            per2: data.id,
-            remark: remark
-          })
-        }
-        normalIo.to('user_' + data.id).emit('receive_contact', {
-          name: ctx.userName,
-          remark,
-          id
-        })
-        ctx.body = {
-          code: 200,
-          msg: '发送成功'
+          let [resultModel, isCreate] = await NewContactRequest.findOrCreate({
+            where: {
+              from: id,
+              to: data.id,
+            },
+            defaults: {
+              accept: 0,
+              from: id,
+              to: data.id,
+              remark,
+            },
+          });
+          if (!isCreate) {
+            await resultModel.update({
+              remark,
+            });
+          }
+          normalIo.to("user_" + data.id).emit("receive_contact", {
+            name: ctx.userName,
+            remark,
+            fromId: id,
+            reqId: resultModel.dataValues.id,
+          });
+          ctx.body = {
+            code: 200,
+            msg: "发送成功",
+          };
         }
       } else {
         ctx.body = {
           code: 400,
-          msg: '没有此用户'
-        }
+          msg: "没有此用户",
+        };
       }
-    }
-  }
+    },
+  };
 
   // 获取联系人请求信息
   const getNewContactsInfo = {
     path: "/contacts/new",
     method: "GET",
     async handle(ctx) {
-      let result = await getNewContactsList(ctx.userId)
-      ctx.body = result
-    }
-  }
+      let result = await getNewContactFrom(ctx.userId);
+      ctx.body = result; //result;
+    },
+  };
 
   // 同意添加联系人
   const acceptContact = {
@@ -92,31 +107,32 @@ module.exports = ({ normalIo }) => {
     async handle(ctx) {
       let { id } = ctx.request.body;
       // 是否已经是联系人了
-      await Contacts.findOrCreate({
-        per1:ctx.userId,
-        per2:id,
-      },{
-        where:{
-          per1:ctx.userId,
-          per2:id,
-        }
-      })
-      await Contacts.update({
-        accept: 1
-      }, {
+      let resultModel = await NewContactRequest.findOne({
         where: {
-          [Op.or]: [{ per1: id, per2: ctx.userId }, { per1: ctx.userId, per2: id }]
-        }
-      })
-      let [targetInfo,userInfo] = await Promise.all([User.findOne({where:{id}}),User.findOne({where:{id:ctx.userId}})])
-      normalIo.to('user_'+id).emit('new_contact',userInfo.dataValues)
-      ctx.body={
-        code:200,
-        data:targetInfo.dataValues
-      }
-    }
-  }
+          id,
+        },
+      });
+      await resultModel.update({
+        accept: 1,
+      });
+      let {
+        dataValues: { from, to },
+      } = resultModel;
+      await Contacts.create({
+        per1: from,
+        per2: to,
+      });
+      let [targetInfo, userInfo] = await Promise.all([
+        User.findOne({ where: { id: from } }),
+        User.findOne({ where: { id: to } }),
+      ]);
+      normalIo.to("user_" + from).emit("new_contact", userInfo.dataValues);
+      ctx.body = {
+        code: 200,
+        data: targetInfo.dataValues,
+      };
+    },
+  };
 
-  return [getAllContacts, addContact, getNewContactsInfo, acceptContact]
-}
-
+  return [getAllContacts, addContact, getNewContactsInfo, acceptContact];
+};

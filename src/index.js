@@ -5,14 +5,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RecoilRoot } from "recoil";
 import ErrorBoundary from "@@/ErrorBoundry";
-window.global = {};
+import { UseRequestProvider } from "ahooks";
 ReactDOM.render(
   <ErrorBoundary>
-    <Suspense fallback={<div>...Loading...</div>}>
-      <RecoilRoot>
-        <App />
-      </RecoilRoot>
-    </Suspense>
+    <UseRequestProvider value={{ manual: true }}>
+      <Suspense fallback={<div>...Loading...</div>}>
+        <RecoilRoot>
+          <App />
+        </RecoilRoot>
+      </Suspense>
+    </UseRequestProvider>
   </ErrorBoundary>,
   document.getElementById("root")
 );

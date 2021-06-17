@@ -12,7 +12,6 @@ const { verify } = require("./utils/token");
 const app = new Koa();
 const http = require("http").createServer(app.callback());
 
-
 const io = new Server(http, {
   cors: {
     origin: true,
@@ -20,19 +19,21 @@ const io = new Server(http, {
   },
 });
 
-let normalIo = io.on('connection',async (socket)=>{
+let normalIo = io.on("connection", async (socket) => {
   let { handshake } = socket;
   let { auth } = handshake;
-  let { name,id } = await verify(auth.token);
-  console.log("上线:"+name)
-  socket.join('user_'+id)
-})
-let roomIo = io.of(/^\/socket\/room\/(\d+)$/)
+  let { name, id } = await verify(auth.token);
+  console.log("上线:" + name);
+  socket.join("user_" + id);
+});
+let roomIo = io
+  .of(/^\/socket\/room\/(\d+)$/)
   .on("connection", (socket) => {
     handleRoom(socket);
   })
   .use(checkSocketToken);
-let contactIo = io.of("/contact")
+let contactIo = io
+  .of("/contact")
   .on("connection", (socket) => {
     handleContact(socket);
   })
@@ -41,10 +42,18 @@ let contactIo = io.of("/contact")
 const router = getRouter({
   roomIo,
   contactIo,
-  normalIo
-})
+  normalIo,
+});
 
-
+router.get("/test", async (ctx) => {
+  ctx.body = {
+    name: "test",
+    age: 12,
+    sex: 122,
+    ...ctx.query,
+  };
+  return;
+});
 //设置响应头
 app.use(headerSet);
 app.use(async (ctx, next) => {

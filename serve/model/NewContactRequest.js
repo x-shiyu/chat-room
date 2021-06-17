@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 module.exports = sequelize.define(
-  "UserRoom",
+  "NewContactRequest",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -9,18 +9,26 @@ module.exports = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    user_id: {
-      type: DataTypes.INTEGER,
+    accept: {
+      type: DataTypes.BOOLEAN,
       allowNull: true,
     },
-    room_id: {
+    from: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    to: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    remark: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },
   {
     freezeTableName: true,
-    tableName: "user_room",
+    tableName: "new_contact_request",
     createdAt: false,
     deletedAt: false,
     updatedAt: false,

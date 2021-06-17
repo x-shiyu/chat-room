@@ -10,7 +10,7 @@ function getUserInfoById(id) {
 }
 function getContacts(id) {
   return querySelect(
-    `select * from user where id in (select per2 from contacts where per1 =${id} and accept=1)`
+    `select * from contacts where per1 =${id} or per2 = ${id}`
   );
 }
 
@@ -94,16 +94,27 @@ function roomMatch(userId, roomId) {
   );
 }
 
-function getUserIdByEmail(email){
-  return querySelect(`select id,name from user where email = '${email}'`)
+function getUserIdByEmail(email) {
+  return querySelect(`select id,name from user where email = '${email}'`);
 }
 
-function addContact(originId,targetId,remark){
-    return queryAdd(`INSERT INTO contacts ( per1,per2,accept,remark ) VALUES ( ${originId},${targetId},null,'${remark}' )`)
+function addContact(originId, targetId, remark) {
+  return queryAdd(
+    `INSERT INTO contacts ( per1,per2,accept,remark ) VALUES ( ${originId},${targetId},null,'${remark}' )`
+  );
 }
 
-function getNewContactsList(id){
-  return querySelect(`select * from user WHERE id IN  (SELECT per2 as contactId from contacts where per1 = ${id}  AND accept IS NULL)`)
+function getNewContactsList(id) {
+  return querySelect(
+    `select * from user WHERE id IN  (SELECT per2 as contactId from contacts where per1 = ${id}  AND accept IS NULL)`
+  );
+}
+
+function getNewContactFrom(id) {
+  return querySelect(`
+  select name,remark,new_contact_request.id as reqId from user left join new_contact_request on user.id = new_contact_request.from
+where new_contact_request.to = ${id}
+  `);
 }
 
 module.exports = {
@@ -116,6 +127,7 @@ module.exports = {
   getRoomPerson,
   getNewContactsList,
   getUserIdByEmail,
+  getNewContactFrom,
 
   addRoom,
   roomMatch,

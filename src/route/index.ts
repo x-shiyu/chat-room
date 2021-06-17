@@ -1,5 +1,5 @@
 import Loading from "@@/common/Loading";
-import Test from "@@/Test";
+import Test from "@/views/Test";
 import BaseLayout from "@/layout/BaseLayout/BaseLayout";
 import NoFound from "@/views/NoFound/NoFound";
 const routes = {
