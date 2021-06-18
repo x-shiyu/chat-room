@@ -3,6 +3,7 @@ const {
   getUserInfoById,
   getUserByNamePwd,
   addRoom,
+  getUserContactRoom,
 } = require("../sql");
 const {
   queryAdd,
@@ -22,11 +23,7 @@ async function test() {
   // });
   // let data = await Promise.all([User.findOne({where:{id:1}}),User.findOne({where:{id:4}})])
   // let data = await getContacts(1);
-  let data = await Contacts.findAll({
-    where: {
-      [Op.or]: [{ per1: 1 }, { per2: 1 }],
-    },
-  });
+  let data = await getUserContactRoom(1, 2);
   console.log(data);
 }
 

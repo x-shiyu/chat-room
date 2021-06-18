@@ -1,6 +1,6 @@
 const { getChatList } = require("../utils/chats");
 const { v4: uuidv4 } = require("uuid");
-const { Room } = require("../model");
+const { Room, UserRoom } = require("../model");
 
 const {
   redisLRange,
@@ -15,6 +15,8 @@ const {
   addRoom,
   getUserContactRoom,
 } = require("../sql");
+
+const { handleCreateRoom } = require("../service/roomHandle");
 
 module.exports = ({ roomIo }) => {
   //获取所有的room
@@ -37,19 +39,9 @@ module.exports = ({ roomIo }) => {
       let roomMsg = [];
       let id = ctx.userId;
       let contactId = ctx.body.contactId;
-      let roomModel = Room;
-      const t = await sequelize.transaction();
-      let [roomInfo] = await getUserContactRoom(id, targetId);
-      if (roomInfo?.room_id) {
-        let msgLen = await redisLLen("room_" + roomInfo.room_id);
-        if (msgLen > 0) {
-          roomMsg = await redisLRange("room_" + roomInfo.room_id, 0, msgLen);
-        }
-      } else {
-        await addRoom([id, targetId]);
-      }
+      let result = await handleCreateRoom(id, contactId);
 
-      ctx.body = roomMsg;
+      ctx.body = result;
     },
   };
 
@@ -72,7 +64,6 @@ module.exports = ({ roomIo }) => {
       let roomId = ctx.params["id"];
       let userId = ctx.userId;
       let { msg } = ctx.request.body;
-      let [roomInfo] = await getUserContactRoom(userId, roomId);
       try {
         let id = uuidv4();
         let time = Date.now();
