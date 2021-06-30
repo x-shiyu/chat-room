@@ -19,7 +19,7 @@ const msgHead = css`
   }
 `;
 const msgContent = css`
-  p {
+  > p {
     padding: 0 20px;
     text-align: left;
     max-width: 150px;
@@ -28,6 +28,10 @@ const msgContent = css`
 `;
 export const msgLeft = css`
   padding-left: 20px;
+  > div {
+    padding-left: 10px;
+    text-align: left;
+  }
   ${msg}
   ${msgHead}
   ${msgContent}
@@ -35,6 +39,10 @@ export const msgLeft = css`
 
 export const msgRight = css`
   flex-direction: row-reverse;
+  > div {
+    padding-right: 10px;
+    text-align: right;
+  }
   ${msg}
   ${msgHead}
   ${msgContent}
@@ -80,5 +88,12 @@ export const chatInput = css`
     height: 100%;
     resize: none;
     overflow-y: auto;
+  }
+`;
+
+export const msgItem = css`
+  > span {
+    font-size: 12px;
+    color: #13c2c2;
   }
 `;

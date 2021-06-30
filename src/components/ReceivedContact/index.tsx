@@ -73,11 +73,11 @@ export default function ReceivedContact() {
           itemLayout="horizontal"
           dataSource={received}
           renderItem={(item: any) => (
-            <Row>
+            <Row style={{ marginTop: "" }}>
               <Col span={10}>
                 {" "}
                 {item.name}
-                {item.remark ? "------" : ""}
+                {item.remark ? "------>" : ""}
                 {item.remark}
               </Col>
               <Col span={4} offset={10}>

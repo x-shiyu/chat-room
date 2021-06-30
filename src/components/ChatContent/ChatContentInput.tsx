@@ -13,7 +13,11 @@ export default function ChatContentInput() {
       <TextArea
         value={value}
         onChange={handleInputChange}
-        onKeyDown={handleClick}
+        onKeyDown={(ev) => {
+          if (ev.code.toLowerCase() === "enter") {
+            handleClick();
+          }
+        }}
       />
       <Button type="primary" className="send" onClick={handleClick}>
         发送

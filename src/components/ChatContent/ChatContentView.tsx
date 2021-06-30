@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { msgLeft, msgRight, msgBox } from "./ChatContentCss";
+import { msgLeft, msgRight, msgBox, msgItem } from "./ChatContentCss";
 import useChatContent from "@/hooks/useChatContent";
 import dayjs from "dayjs";
 
@@ -15,7 +15,7 @@ export default function ChatContentView() {
           css={item.from_id === userInfo.id ? msgLeft : msgRight}
         >
           <span>{item.from_name}</span>
-          <div>
+          <div css={msgItem}>
             <span>{dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss")}</span>
             <p>{item.message}</p>
           </div>
