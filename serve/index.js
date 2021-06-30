@@ -41,7 +41,7 @@ const router = getRouter({
   roomIo,
   normalIo,
 });
-// app.use(require("koa-static")(path.join(__dirname, "../build")));
+app.use(require("koa-static")(path.join(__dirname, "../build")));
 
 router.get("/test", async (ctx) => {
   ctx.body = {

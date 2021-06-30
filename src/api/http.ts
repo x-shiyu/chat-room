@@ -2,8 +2,10 @@ import axios, { AxiosRequestConfig } from "axios";
 import { getToken, setToken } from "@/utils/storage";
 import { BASEURL } from "@/consts";
 
+let isDev = process.env.NODE_ENV === "development";
+
 const instance = axios.create({
-  baseURL: "http://" + BASEURL,
+  baseURL: isDev ? BASEURL : "/",
 });
 instance.interceptors.request.use((config: AxiosRequestConfig) => {
   config.headers["Authentication"] = getToken();
