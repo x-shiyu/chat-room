@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import { AtomActiveRoomId } from "@/atoms/AuthStatus";
 
 export default function ChatBox(args: any) {
+  console.log("-------------ChatBox--------------");
   let [activeRoomId] = useRecoilState(AtomActiveRoomId);
   return (
     <Fragment>

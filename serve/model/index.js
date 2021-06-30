@@ -3,6 +3,7 @@ const Room = require("./Room");
 const Contacts = require("./Contacts");
 const UserRoom = require("./UserRoom");
 const NewContactRequest = require("./NewContactRequest");
+const Message = require("./Message");
 
 module.exports = {
   User,
@@ -10,4 +11,5 @@ module.exports = {
   UserRoom,
   Contacts,
   NewContactRequest,
+  Message,
 };

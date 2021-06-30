@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 module.exports = sequelize.define(
-  "NewContactRequest",
+  "Message",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -9,33 +9,37 @@ module.exports = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    accept: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-    },
-    from: {
+    room_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    to: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    remark: {
+    message: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    from_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    from_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.TIME,
       allowNull: false,
       defaultValue: new Date(),
     },
+    deleted_at: {
+      type: DataTypes.TIME,
+      allowNull: true,
+    },
   },
   {
     freezeTableName: true,
-    tableName: "new_contact_request",
+    tableName: "message",
+    updatedAt: false,
     createdAt: false,
     deletedAt: false,
-    updatedAt: false,
   }
 );

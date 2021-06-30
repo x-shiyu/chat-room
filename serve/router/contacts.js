@@ -70,11 +70,13 @@ module.exports = ({ normalIo }) => {
               remark,
             });
           }
-          normalIo.to("user_" + data.id).emit("receive_contact", {
+          normalIo.to("user_" + data.id).emit("new_contact_request", {
             name: ctx.userName,
             remark,
-            fromId: id,
-            reqId: resultModel.dataValues.id,
+            from: id,
+            id: resultModel.dataValues.id,
+            created_at: Date.now(),
+            accept: 0,
           });
           ctx.body = {
             code: 200,
@@ -105,31 +107,41 @@ module.exports = ({ normalIo }) => {
     path: "/contacts/accept",
     method: "POST",
     async handle(ctx) {
-      let { id } = ctx.request.body;
+      let { from } = ctx.request.body;
       // 是否已经是联系人了
-      let resultModel = await NewContactRequest.findOne({
-        where: {
-          id,
+      await NewContactRequest.update(
+        {
+          accept: 1,
         },
-      });
-      await resultModel.update({
-        accept: 1,
-      });
-      let {
-        dataValues: { from, to },
-      } = resultModel;
+        {
+          where: {
+            [Op.or]: [
+              { from: from, to: ctx.userId },
+              { from: ctx.userId, to: from },
+            ],
+          },
+        }
+      );
       await Contacts.create({
         per1: from,
-        per2: to,
+        per2: ctx.userId,
       });
-      let [targetInfo, userInfo] = await Promise.all([
+      let [fromUser, user] = await Promise.all([
         User.findOne({ where: { id: from } }),
-        User.findOne({ where: { id: to } }),
+        User.findOne({ where: { id: ctx.userId } }),
       ]);
-      normalIo.to("user_" + from).emit("new_contact", userInfo.dataValues);
+
+      normalIo.to("user_" + from).emit("new_contact", user.dataValues);
+
+      normalIo.to("user_" + from).emit("new_contact_request", {
+        from: ctx.userId,
+        accept: 1,
+        isAccept: true,
+      });
+
       ctx.body = {
         code: 200,
-        data: targetInfo.dataValues,
+        data: fromUser.dataValues,
       };
     },
   };

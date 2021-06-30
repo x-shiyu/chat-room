@@ -1,10 +1,14 @@
-import Loading from "@@/common/Loading";
 import Test from "@/views/Test";
 import BaseLayout from "@/layout/BaseLayout/BaseLayout";
 import NoFound from "@/views/NoFound/NoFound";
+import Register from "@/views/Register";
+import Login from "@/views/Login/Login";
 const routes = {
   "/login": {
-    component: Loading,
+    component: Login,
+  },
+  "/register": {
+    component: Register,
   },
   "/test": {
     component: Test,

@@ -6,7 +6,7 @@ const msg = css`
   justify-content: flex-start;
 `;
 const msgHead = css`
-  span {
+  > span {
     display: block;
     height: 40px;
     width: 40px;

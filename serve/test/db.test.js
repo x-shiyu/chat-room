@@ -11,7 +11,7 @@ const {
   redisLRange,
   querySelect,
 } = require("../config/db");
-const { User, Contacts } = require("../model");
+const { User, Contacts, Message } = require("../model");
 const { Op } = require("sequelize");
 async function test() {
   // let data = await Contacts.update({
@@ -23,8 +23,16 @@ async function test() {
   // });
   // let data = await Promise.all([User.findOne({where:{id:1}}),User.findOne({where:{id:4}})])
   // let data = await getContacts(1);
-  let data = await getUserContactRoom(1, 2);
-  console.log(data);
+  // let data = await Message.create({
+  //   room_id: 12,
+  //   message: "cqqwqdqwd",
+  //   from_id: 1,
+  //   from_name: "春蛙秋蝉",
+  // });
+  // let data = await Message.findAll();
+  // console.log(data.getDataValue("created_at"));
+  let [data] = await getUserContactRoom(1, 11);
+  debugger;
 }
 
 test();

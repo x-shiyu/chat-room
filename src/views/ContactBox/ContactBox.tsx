@@ -8,6 +8,8 @@ import { Route } from "react-router-dom";
 import ChatContent from "@@/ChatContent/ChatContent";
 import ContactContent from "@@/ContactContent";
 export default function ContactBox() {
+  console.log("-------------ContactBox--------------");
+
   let [activeContactId] = useRecoilState(AtomActiveContact);
   return (
     <Fragment>

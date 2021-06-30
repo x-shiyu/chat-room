@@ -5,10 +5,16 @@ import useChatInput from "@/hooks/useChatInput";
 import { Input } from "antd";
 let { TextArea } = Input;
 export default function ChatContentInput() {
+  console.log("-------------ChatContentInput--------------");
+
   let { value, handleInputChange, handleClick } = useChatInput();
   return (
     <div css={chatInput}>
-      <TextArea value={value} onChange={handleInputChange} />
+      <TextArea
+        value={value}
+        onChange={handleInputChange}
+        onKeyDown={handleClick}
+      />
       <Button type="primary" className="send" onClick={handleClick}>
         发送
       </Button>

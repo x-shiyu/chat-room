@@ -5,7 +5,7 @@ import useInit from "@/hooks/useInit";
 import { BrowserRouter as Router } from "react-router-dom";
 import { routeMatch } from "@/route";
 
-const noAuthPath = ["/test", "/login"];
+const noAuthPath = ["/test", "/login", "/register"];
 
 function authRender(location: any, login: boolean) {
   let RouteCom = routeMatch(location.pathname);
@@ -26,12 +26,6 @@ export default function App() {
   return (
     <>
       <Router>
-        <Route path={"/login"}>
-          <Login />
-        </Route>
-        <Route path={"/test"}>
-          <h1>test</h1>
-        </Route>
         <Route
           path="/"
           render={({ location }) => authRender(location, isLogin)}

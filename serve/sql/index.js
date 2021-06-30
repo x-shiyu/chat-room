@@ -112,7 +112,7 @@ function getNewContactsList(id) {
 
 function getNewContactFrom(id) {
   return querySelect(`
-  select name,remark,new_contact_request.id as reqId from user left join new_contact_request on user.id = new_contact_request.from
+  select new_contact_request.from as \'from\', \'name\' ,accept,remark,new_contact_request.id as id,new_contact_request.created_at as created_at from user left join new_contact_request on user.id = new_contact_request.from
 where new_contact_request.to = ${id}
   `);
 }

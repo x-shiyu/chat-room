@@ -1,20 +1,6 @@
-const { getChatList } = require("../utils/chats");
-const { v4: uuidv4 } = require("uuid");
-const { Room, UserRoom } = require("../model");
+const { Message } = require("../model");
 
-const {
-  redisLRange,
-  redisLLen,
-  redisRPush,
-  sequelize,
-} = require("../config/db");
-
-const {
-  getRoomPerson,
-  getUserRoomsById,
-  addRoom,
-  getUserContactRoom,
-} = require("../sql");
+const { getRoomPerson, getUserRoomsById } = require("../sql");
 
 const { handleCreateRoom } = require("../service/roomHandle");
 
@@ -36,9 +22,8 @@ module.exports = ({ roomIo }) => {
     path: "/room",
     method: "POST",
     handle: async (ctx, next) => {
-      let roomMsg = [];
       let id = ctx.userId;
-      let contactId = ctx.body.contactId;
+      let contactId = ctx.request.body.contactId;
       let result = await handleCreateRoom(id, contactId);
 
       ctx.body = result;
@@ -51,8 +36,13 @@ module.exports = ({ roomIo }) => {
     method: "GET",
     handle: async (ctx, next) => {
       let roomId = ctx.params["id"];
-      let chatList = await getChatList("room_" + roomId);
-      ctx.body = chatList.map((item) => JSON.parse(item));
+      let chatList = await Message.findAll({
+        where: {
+          room_id: roomId,
+          deleted_at: null,
+        },
+      });
+      ctx.body = chatList.map((item) => item.dataValues);
     },
   };
 
@@ -62,20 +52,21 @@ module.exports = ({ roomIo }) => {
     method: "PUT",
     handle: async (ctx, next) => {
       let roomId = ctx.params["id"];
-      let userId = ctx.userId;
       let { msg } = ctx.request.body;
       try {
-        let id = uuidv4();
-        let time = Date.now();
         let msgInfo = {
-          id,
-          msg,
-          name: ctx.userName,
-          userId,
-          time,
+          room_id: roomId,
+          message: msg,
+          from_id: ctx.userId,
+          from_name: ctx.userName,
         };
-        await redisRPush("room_" + roomId, JSON.stringify(msgInfo));
-        roomIo.to("room_" + roomId).emit("receive_msg", msgInfo);
+        let messageModel = await Message.create(msgInfo);
+        roomIo
+          .to("room_" + roomId)
+          .emit("receive_msg", messageModel.dataValues);
+        roomIo
+          .to("room_" + ctx.userId)
+          .emit("receive_msg", messageModel.dataValues);
         ctx.body = {
           code: 200,
         };

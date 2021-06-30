@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 
-export const loginBox = css`
+export const registerBox = css`
   width: 500px;
   height: 400px;
   margin: 50px auto;

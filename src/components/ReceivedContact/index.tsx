@@ -1,27 +1,66 @@
 /** @jsxImportSource @emotion/react */
 import { useRecoilState } from "recoil";
-import { AtomReceivedContacts } from "@/atoms/AuthStatus";
+import { AtomNewContactReq } from "@/atoms/AuthStatus";
 import { Button, Modal, List, Row, Col } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { acceptContact } from "@/api/chat";
 import { AtomContacts } from "@/atoms/ChatInfo";
-export default function ChatContent() {
-  let [received] = useRecoilState(AtomReceivedContacts);
+import { AtomNewNotice } from "@/atoms/Notice";
+import { saveNoticeViewTime } from "@/utils";
+import { stateSplice } from "@/utils";
+
+function getTime(time: string) {
+  return new Date(time).getTime();
+}
+export default function ReceivedContact() {
+  console.log("-------------ReceivedContact--------------");
+
+  let [received, setNContactReq] = useRecoilState(AtomNewContactReq);
   let [contacts, setContacts] = useRecoilState(AtomContacts);
+  let [newNotice, setNewNotice] = useRecoilState(AtomNewNotice);
   const [visible, setVisible] = useState(false);
-  function handleClick(id: number) {
+
+  function showModel() {
+    setVisible(true);
+    setNewNotice({
+      latest_view_contact: Date.now(),
+      latest_view_room: newNotice.latest_view_room,
+    });
+    saveNoticeViewTime({
+      latest_view_contact: Date.now(),
+      latest_view_room: newNotice.latest_view_room,
+    });
+  }
+  function handleClick(from: number, id: number) {
     return () => {
-      acceptContact(id).then((response: any) => {
+      acceptContact(from, id).then((response: any) => {
         if (response.code === 200) {
           setContacts([...contacts, response.data]);
+          let reqCopy = stateSplice(
+            received,
+            (item) => {
+              return item.from === from;
+            },
+            {
+              accept: 1,
+            }
+          );
+          setNContactReq(reqCopy);
         }
       });
     };
   }
   return (
     <>
-      <Button size="small" onClick={() => setVisible(true)}>
+      <Button size="small" onClick={showModel}>
         新联系人
+        <span>
+          {
+            received.filter(
+              (item) => getTime(item.created_at) > newNotice.latest_view_contact
+            ).length
+          }
+        </span>
       </Button>
       <Modal
         title="新请求"
@@ -44,9 +83,10 @@ export default function ChatContent() {
               <Col span={4} offset={10}>
                 {" "}
                 <Button
+                  disabled={item.accept === 1}
                   size="small"
                   type="primary"
-                  onClick={handleClick(item.reqId)}
+                  onClick={handleClick(item.from, item.id)}
                 >
                   同意
                 </Button>

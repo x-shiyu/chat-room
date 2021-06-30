@@ -36,8 +36,13 @@ export default function useLogin(from: string | undefined) {
     console.log("Failed:", errorInfo);
   };
 
+  const handleRegister = () => {
+    history.push("/register");
+  };
+
   return {
     onFinish,
     onFinishFailed,
+    handleRegister,
   };
 }

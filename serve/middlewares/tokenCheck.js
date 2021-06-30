@@ -1,5 +1,5 @@
 const { isExpires } = require("../utils/token");
-const freePath = ["/login", "/test", "/socket"];
+const freePath = ["/login", "/test", "/socket", "/register"];
 module.exports = async function tokenCheck(ctx, next) {
   if (
     ctx.req.method === "OPTIONS" ||

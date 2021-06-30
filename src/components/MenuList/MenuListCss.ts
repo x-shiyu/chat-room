@@ -7,13 +7,14 @@ export const listItem = css`
     a {
       display: block;
       padding: 10px;
-      background: yellow;
+      color: yellow;
+      background: lightcoral;
       cursor: pointer;
       text-align: center;
       text-decoration: none;
       &:hover {
-        background: lightcoral;
-        color: yellow;
+        background: yellow;
+        color: lightcoral;
       }
     }
   }

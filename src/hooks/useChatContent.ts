@@ -6,6 +6,7 @@ import { getRoomInfoById } from "@/api/chat";
 import { createRoomSocket } from "@/utils/socket-io";
 import { AtomSockets } from "@/atoms/Sockets";
 import { mapAdd } from "@/utils";
+import { handleRoomMsg } from "@/socket-handle/handle-room";
 
 export default function useChatContent() {
   let [activeRoom] = useRecoilState<number>(AtomActiveRoomId);
@@ -15,12 +16,8 @@ export default function useChatContent() {
   let [sockets, setSockets] = useRecoilState(AtomSockets);
   useEffect(() => {
     if (activeRoom !== -1) {
-      if (!sockets.get('room_' + activeRoom)) {
-        let socket = createRoomSocket(activeRoom, {
-          receive_msg:(response: any)=>{
-            setChatList(response);
-          },
-        });
+      if (!sockets.get("room_" + activeRoom)) {
+        let socket = createRoomSocket(activeRoom, handleRoomMsg(setChatList));
         setSockets(mapAdd(sockets, "room_" + activeRoom, socket));
       }
       getRoomInfoById(activeRoom).then((data) => {

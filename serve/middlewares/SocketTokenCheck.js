@@ -1,6 +1,5 @@
 const { isExpires } = require("../utils/token");
 module.exports = async function (socket, next) {
-  console.log("lianjie------------");
   let { handshake } = socket;
   let { auth } = handshake;
   if (auth.token !== "") {

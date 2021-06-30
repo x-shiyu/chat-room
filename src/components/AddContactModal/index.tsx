@@ -14,21 +14,20 @@ export default function AddContactModal({
   visible,
   setVisible,
 }: AddContactModalProps) {
+  console.log("-------------AddContactModal--------------");
+
   let [remark, setRemark] = useState("");
   let [email, setEmail] = useState("");
   function addContact() {
-    addContacts(
-      email,
-      remark,
-    ).then((response:any)=>{
-      if(response.code===200){
-        if(response.data){
+    addContacts(email, remark).then((response: any) => {
+      if (response.code === 200) {
+        if (response.data) {
           console.log(response.data);
-        }else{
-          message.success(response.msg)
+        } else {
+          message.success(response.msg);
         }
-      }else{
-        message.error(response.msg)
+      } else {
+        message.error(response.msg);
       }
     });
     setEmail("");

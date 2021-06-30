@@ -4,12 +4,19 @@ import { listItem, userBox } from "./MenuListCss";
 import { Button } from "antd";
 import useMenu from "@/hooks/useMenu";
 import AddContactModal from "@@/AddContactModal";
-import ReceivedContact from '@@/ReceivedContact'
+import ReceivedContact from "@@/ReceivedContact";
 export default function MenuList() {
+  console.log("-------------MenuList--------------");
+
   const navActiveStyle = {
-    background: "lightcoral",
-    color: "yellow",
+    background: "yellow",
+    color: "lightcoral",
   };
+
+  function handleSignOut() {
+    window.localStorage.setItem("token", "");
+    window.location.reload();
+  }
   let { userInfo, setVisible, visible } = useMenu();
   return (
     <>
@@ -31,11 +38,15 @@ export default function MenuList() {
           </Button>
         </li>
         <li>
-          <ReceivedContact/>
+          <ReceivedContact />
+        </li>
+        <li>
+          <Button type="primary" onClick={handleSignOut}>
+            退出
+          </Button>
         </li>
       </ul>
       <AddContactModal visible={visible} setVisible={setVisible} />
-
     </>
   );
 }

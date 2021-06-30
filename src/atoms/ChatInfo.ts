@@ -3,10 +3,10 @@ import { Socket } from "socket.io-client";
 
 export interface Msg {
   id: number;
-  msg: string;
-  time: string;
-  name: string;
-  userId: number;
+  message: string;
+  created_at: string;
+  from_name: string;
+  from_id: number;
 }
 
 export interface RoomInfo {

@@ -13,35 +13,39 @@ async function createRoom(allUsers) {
         transaction: t,
       }
     );
-    await allUsers.map((userId) => {
-      return UserRoom.create(
-        {
-          user_id: userId,
-          room_id: roomModel.dataValues.id,
-        },
-        {
-          transaction: t,
-        }
-      );
-    });
+    await Promise.all(
+      allUsers.map((userId) => {
+        return UserRoom.create(
+          {
+            user_id: userId,
+            room_id: roomModel.dataValues.id,
+          },
+          {
+            transaction: t,
+          }
+        );
+      })
+    );
     await t.commit();
-    return roomModel;
+    return roomModel.dataValues.id;
   } catch (err) {
     console.log(err);
     await t.rollback();
     return false;
   }
 }
-export async function handleCreateRoom(userId, contactId) {
+async function handleCreateRoom(userId, contactId) {
   let roomId = null;
   let allUserId = [userId, ...contactId];
-  let allUsers = await allUserId.map((id) => {
-    return User.findOne({
-      where: {
-        id,
-      },
-    });
-  });
+  let allUsers = await Promise.all(
+    allUserId.map((id) => {
+      return User.findOne({
+        where: {
+          id,
+        },
+      });
+    })
+  );
   if (contactId.length === 1) {
     let [roomInfo] = await getUserContactRoom(userId, contactId[0]);
     if (roomInfo) {
@@ -57,3 +61,6 @@ export async function handleCreateRoom(userId, contactId) {
     persons: allUsers.map((item) => item.dataValues),
   };
 }
+module.exports = {
+  handleCreateRoom,
+};

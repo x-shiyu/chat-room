@@ -19,29 +19,25 @@ const io = new Server(http, {
   },
 });
 
-let normalIo = io.on("connection", async (socket) => {
-  let { handshake } = socket;
-  let { auth } = handshake;
-  let { name, id } = await verify(auth.token);
-  console.log("上线:" + name);
-  socket.join("user_" + id);
-});
+let normalIo = io
+  .on("connection", async (socket) => {
+    let { handshake } = socket;
+    let { auth } = handshake;
+    let { name, id } = await verify(auth.token);
+    console.log("上线:" + name);
+    socket.join("user_" + id);
+  })
+  .use(SocketTokenCheck);
+
 let roomIo = io
   .of(/^\/socket\/room\/(\d+)$/)
   .on("connection", (socket) => {
     handleRoom(socket);
   })
   .use(checkSocketToken);
-let contactIo = io
-  .of("/contact")
-  .on("connection", (socket) => {
-    handleContact(socket);
-  })
-  .use(SocketTokenCheck);
 
 const router = getRouter({
   roomIo,
-  contactIo,
   normalIo,
 });
 

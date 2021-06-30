@@ -8,11 +8,12 @@ export default function useChatInput() {
   let [activeRoomId] = useRecoilState(AtomActiveRoomId);
   const [value, setValue] = useState("");
   let handleClick = async () => {
-    sendMsg(activeRoomId,value).then((data:any)=>{
-        if(data.code!==200){
-          message.error(data.msg)
-        }
-    })
+    sendMsg(activeRoomId, value).then((data: any) => {
+      setValue("");
+      if (data.code !== 200) {
+        message.error(data.msg);
+      }
+    });
   };
   let handleInputChange = (ev: any) => {
     let value = ev.target.value;

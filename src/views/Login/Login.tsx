@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { loginBox, submitBox } from "./LoginCss";
+import { loginBox, submitBox, registerBtn } from "./LoginCss";
 import { Form, Input, Button } from "antd";
 import useLogin from "@/hooks/useLogin";
 
@@ -17,7 +17,7 @@ const layout = {
 };
 
 export default function Login({ from }: LoginProps) {
-  let { onFinish, onFinishFailed } = useLogin(from);
+  let { onFinish, onFinishFailed, handleRegister } = useLogin(from);
 
   return (
     <div css={loginBox}>
@@ -38,6 +38,14 @@ export default function Login({ from }: LoginProps) {
           <div css={submitBox}>
             <Button type="primary" htmlType="submit" size="large">
               登录
+            </Button>
+            <Button
+              css={registerBtn}
+              type="default"
+              size="large"
+              onClick={handleRegister}
+            >
+              注册
             </Button>
           </div>
         </Form>

@@ -4,6 +4,8 @@ import { useRecoilState } from "recoil";
 import { AtomChatRoom } from "@/atoms/ChatInfo";
 import { AtomActiveRoomId } from "@/atoms/AuthStatus";
 export default function ChatList() {
+  console.log("-------------ChatList--------------");
+
   let [activeRoomId, setActiveRoomId] = useRecoilState(AtomActiveRoomId);
   let [chatRoom] = useRecoilState(AtomChatRoom);
 
