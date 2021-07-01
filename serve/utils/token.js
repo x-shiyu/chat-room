@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { secret, expires } = require("../config/conts");
-const { redisGet } = require("../config/db");
+global.tokens = {};
 function sign(data) {
   data["expires"] = Date.now() + expires;
   return jwt.sign(data, secret);
@@ -17,17 +17,28 @@ function verify(token) {
   });
 }
 
-async function isExpires(tokenInput) {
-  let { id, name } = await verify(tokenInput);
-  let token = await redisGet(id + name);
-  return {
-    token,
-    id,
-    name,
-  };
+async function isRightToken(tokenInput) {
+  try {
+    let { id, name, expire } = await verify(tokenInput);
+    let token = global.tokens[id + name];
+    if (expire < Date.now() || tokenInput !== token) {
+      return {
+        result: false,
+      };
+    }
+    return {
+      result: true,
+      name,
+      id,
+    };
+  } catch (err) {
+    return {
+      result: false,
+    };
+  }
 }
 module.exports = {
   sign,
   verify,
-  isExpires,
+  isRightToken,
 };

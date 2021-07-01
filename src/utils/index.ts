@@ -1,9 +1,19 @@
 import { Notice } from "@/atoms/Notice";
 
 //生成新的map
-export function mapAdd<K, V>(origin: Map<K, V>, key: K, value: V): Map<K, V> {
+export function mapAdd<K, V>(
+  origin: Map<K, V>,
+  key: K | any[],
+  value?: V
+): Map<K, V> {
   let map = new Map(origin);
-  map.set(key, value);
+  if (Array.isArray(key)) {
+    key.forEach((name: K, socket: any) => {
+      map.set(name, socket);
+    });
+  } else {
+    map.set(key, value as V);
+  }
   return map;
 }
 
@@ -56,4 +66,23 @@ export function stateSplice(
     ...newData,
   });
   return newState;
+}
+
+interface Events {
+  [key: string]: ((data: any) => void)[];
+}
+export class Emitter {
+  events: Events = {};
+  subscribe(eventName: string, eventFn: () => void) {
+    if (Array.isArray(this.events[eventName])) {
+      this.events[eventName].push(eventFn);
+    } else {
+      this.events[eventName] = [eventFn];
+    }
+  }
+  emit(eventName: string, payload: any) {
+    this.events[eventName]?.forEach((fn) => {
+      fn(payload);
+    });
+  }
 }

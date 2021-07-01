@@ -1,10 +1,4 @@
-const {
-  sequelize,
-  querySelect,
-  queryAdd,
-  redisLRange,
-  redisLLen,
-} = require("../config/db");
+const { sequelize, querySelect, queryAdd } = require("../config/db");
 function getUserInfoById(id) {
   return querySelect(`select * from user where id=${id}`);
 }
@@ -21,27 +15,6 @@ function getUserByNamePwd(username, password) {
 }
 function getUserRoomsById(id) {
   return querySelect(`select room_id from user_room where user_id = ${id}`);
-}
-
-function getUserRoomMsg(roomIds) {
-  let roomsPro = roomIds.map((roomId) => {
-    return new Promise(async (resolve, reject) => {
-      let len = await redisLLen("room_" + roomId);
-      if (len > 0) {
-        let list = await redisLRange("room_" + roomId, 0, len);
-        resolve({
-          room_id: roomId,
-          list: list.map((item) => JSON.parse(item)),
-        });
-      } else {
-        resolve({
-          room_id: roomId,
-          list: [],
-        });
-      }
-    });
-  });
-  return Promise.all(roomsPro);
 }
 
 async function getRoomPerson(roomIds) {
@@ -122,7 +95,6 @@ module.exports = {
   getContacts,
   getUserByNamePwd,
   getUserRoomsById,
-  getUserRoomMsg,
   getUserContactRoom,
   getRoomPerson,
   getNewContactsList,

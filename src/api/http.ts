@@ -18,6 +18,7 @@ instance.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       setToken("");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }

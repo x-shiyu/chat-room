@@ -1,4 +1,4 @@
-const { isExpires } = require("../utils/token");
+const { isRightToken } = require("../utils/token");
 const freePath = ["/login", "/test", "/socket", "/register"];
 module.exports = async function tokenCheck(ctx, next) {
   if (
@@ -9,10 +9,10 @@ module.exports = async function tokenCheck(ctx, next) {
     await next();
   } else {
     if (ctx.req.headers["authentication"]) {
-      let { token, id, name } = await isExpires(
+      let { result, id, name } = await isRightToken(
         ctx.req.headers["authentication"]
       );
-      if (token === ctx.req.headers["authentication"]) {
+      if (result) {
         ctx["userId"] = id;
         ctx.userName = name;
         await next();

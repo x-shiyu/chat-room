@@ -1,19 +1,12 @@
-const {
-  getUserByNamePwd
-} = require("../sql");
+const { getUserByNamePwd } = require("../sql");
 const { sign } = require("../utils/token");
-const {
-  redisSet,
-  redisExpire,
-} = require("../config/db");
 const { expires } = require("../config/conts");
-
 
 module.exports = () => {
   ////登录
   const login = {
     path: "/login",
-    method: 'POST',
+    method: "POST",
     handle: async (ctx) => {
       let { username, password } = ctx.request.body;
       let [data] = await getUserByNamePwd(username, password);
@@ -23,8 +16,7 @@ module.exports = () => {
           name: data.name,
           expire: Date.now() + expires,
         });
-        await redisSet(data.id + data.name, token);
-        await redisExpire(token, expires / 1000);
+        global.tokens[data.id + data.name] = token;
         ctx.body = {
           token,
           expire: Date.now() + expires,
@@ -33,12 +25,7 @@ module.exports = () => {
         ctx.status = 403;
         ctx.body = "用户名或密码错误!";
       }
-    }
-  }
-  return [login]
-}
-
-
-
-
-
+    },
+  };
+  return [login];
+};

@@ -1,7 +1,5 @@
-export function handleRoomMsg(setChatList: any) {
-  return {
-    receive_msg: (response: any) => {
-      setChatList(response);
-    },
+export function receive_msg(setChatList: any) {
+  return (response: any) => {
+    setChatList(response);
   };
 }

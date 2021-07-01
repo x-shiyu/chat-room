@@ -1,4 +1,4 @@
-const { isExpires } = require("../utils/token");
+const { isRightToken } = require("../utils/token");
 const { roomMatch } = require("../sql");
 module.exports = async function (socket, next) {
   let { nsp, handshake } = socket;
@@ -6,9 +6,9 @@ module.exports = async function (socket, next) {
   let [_, roomId] = nspName.match(/^\/socket\/room\/(\d+)$/);
   let { auth } = handshake;
   if (auth.token !== "") {
-    let { token, id } = await isExpires(auth.token);
+    let { result, id } = await isRightToken(auth.token);
     let [{ num }] = await roomMatch(id, roomId);
-    if (token === token && num === 1) {
+    if (result && num === 1) {
       await next();
     }
   }

@@ -8,18 +8,20 @@ import { AtomLogin } from "@/atoms/AuthStatus";
 import { AtomSockets } from "@/atoms/Sockets";
 import { createQuerySocket } from "@/utils/socket-io";
 import { mapAdd } from "@/utils";
-import { handleGlobalSocket } from "@/socket-handle/handle-global";
+import {
+  new_contact_request,
+  new_contact,
+} from "@/socket-handle/handle-global";
 import { AtomNewNotice } from "@/atoms/Notice";
 import { mapAndArray } from "@/utils";
 
 export default function useInit() {
   let [_, setChatRoom] = useRecoilState(AtomChatRoom);
-  let [contacts, setContacts] = useRecoilState(AtomContacts);
+  let [__, setContacts] = useRecoilState(AtomContacts);
   let [userInfo, setUserInfo] = useRecoilState(AtomUserInfo);
-  let [oContactReq, setNContactReq] = useRecoilState(AtomNewContactReq);
-  let [___, setNewNotice] = useRecoilState(AtomNewNotice);
+  let [___, setNContactReq] = useRecoilState(AtomNewContactReq);
+  let [____, setNewNotice] = useRecoilState(AtomNewNotice);
   let [isLogin] = useRecoilState(AtomLogin);
-
   const [sockets, setSockets] = useRecoilState(AtomSockets);
 
   useEffect(() => {
@@ -40,17 +42,18 @@ export default function useInit() {
         getContacts(),
         getReceivedContacts(),
       ]).then(([rooms, userInfo, contacts, newContactReq]) => {
-        let socket = createQuerySocket(
-          "/",
-          handleGlobalSocket(
+        let allSockets = [];
+        //全局socket
+        let globalSocket = createQuerySocket("/", {
+          [new_contact_request.name]: new_contact_request(
             newContactReq,
-            setNContactReq,
-            contacts,
-            setContacts
-          )
-        );
+            setNContactReq
+          ),
+          [new_contact.name]: new_contact(contacts, setContacts),
+        });
+        allSockets.push(["user_" + userInfo.id, globalSocket]);
 
-        setSockets(mapAdd(sockets, "user_" + userInfo.id, socket));
+        setSockets(mapAdd(sockets, allSockets));
 
         setNContactReq(newContactReq);
         setChatRoom(rooms);
