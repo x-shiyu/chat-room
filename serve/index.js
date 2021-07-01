@@ -2,7 +2,9 @@ const Koa = require("koa");
 const { Server } = require("socket.io");
 const koaBody = require("koa-body");
 const path = require("path");
-const { handleRoom, handleContact } = require("./socket-io");
+const fs = require("fs");
+
+const { handleRoom } = require("./socket-io");
 const getRouter = require("./router");
 const headerSet = require("./middlewares/headerSet");
 const tokenCheck = require("./middlewares/tokenCheck");
@@ -12,7 +14,7 @@ const { verify } = require("./utils/token");
 
 const app = new Koa();
 const http = require("http").createServer(app.callback());
-
+const port = process.env.NODE__ENV === "development" ? 8000 : 80;
 const io = new Server(http, {
   cors: {
     origin: true,
@@ -37,21 +39,13 @@ let roomIo = io
   })
   .use(checkSocketToken);
 
+app.use(require("koa-static")(path.join(__dirname, "../build")));
+
 const router = getRouter({
   roomIo,
   normalIo,
 });
-app.use(require("koa-static")(path.join(__dirname, "../build")));
 
-router.get("/test", async (ctx) => {
-  ctx.body = {
-    name: "test",
-    age: 12,
-    sex: 122,
-    ...ctx.query,
-  };
-  return;
-});
 //设置响应头
 app.use(headerSet);
 app.use(async (ctx, next) => {
@@ -67,7 +61,10 @@ app.use(tokenCheck);
 app.use(koaBody());
 
 app.use(router.routes()).use(router.allowedMethods());
-
-http.listen("8000", () => {
-  console.log("listen in 8000");
+app.use(async (ctx) => {
+  ctx.type = "text/html";
+  ctx.body = fs.readFileSync(path.join(__dirname, "../build/index.html"));
+});
+http.listen(port, () => {
+  console.log(`listen in ${port}`);
 });

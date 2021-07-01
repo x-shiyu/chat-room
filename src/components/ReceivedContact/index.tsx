@@ -2,7 +2,7 @@
 import { useRecoilState } from "recoil";
 import { AtomNewContactReq } from "@/atoms/AuthStatus";
 import { Button, Modal, List, Row, Col } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { acceptContact } from "@/api/chat";
 import { AtomContacts } from "@/atoms/ChatInfo";
 import { AtomNewNotice } from "@/atoms/Notice";

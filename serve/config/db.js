@@ -1,9 +1,12 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("chat_room", "root", "123456", {
+const USER_NAME = process.env.DB_NAME || "root";
+const PASSWORD = process.env.DB_PASSWORD || "123456";
+const PORT = process.env.DB_PORT || 3307;
+const sequelize = new Sequelize("chat_room", USER_NAME, PASSWORD, {
   dialect: "mariadb",
   host: "localhost",
-  port: 3307,
+  port: PORT,
   timezone: "+08:00",
 });
 function query(sql, type, transaction) {
