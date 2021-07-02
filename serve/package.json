@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "io-serve": "node index.js"
+    "io-serve": "cross-env NODE_ENV=development node index.js"
   },
   "keywords": [],
   "author": "",

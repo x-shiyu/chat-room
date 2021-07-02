@@ -14,7 +14,7 @@ const { verify } = require("./utils/token");
 
 const app = new Koa();
 const http = require("http").createServer(app.callback());
-const port = process.env.NODE__ENV === "development" ? 8000 : 80;
+const port = process.env.NODE_ENV === "development" ? 8000 : 80;
 const io = new Server(http, {
   cors: {
     origin: true,

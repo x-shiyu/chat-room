@@ -10,6 +10,7 @@
     "ahooks": "^2.10.6",
     "antd": "^4.16.1",
     "axios": "^0.21.1",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.10.5",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
@@ -29,7 +30,7 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "serve": "node ./serve/index.js",
+    "serve": "cross-env NODE_ENV=development node ./serve/index.js",
     "deploy": "npm run build && npm run serve"
   },
   "eslintConfig": {
